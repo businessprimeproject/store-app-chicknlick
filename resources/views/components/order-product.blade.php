@@ -1,0 +1,9 @@
+@props(['name', 'sku', 'price', 'unit', 'image', 'tag' => 'In Stock', 'tagClass' => 'bg-emerald-100 text-emerald-700 border-emerald-300', 'category' => ''])
+<article class="order-product rounded-xl border border-[#e0d7c6] bg-white p-3.5 shadow-sm" data-sku="{{ $sku }}" data-name="{{ $name }}" data-price="{{ preg_replace('/[^0-9.]/', '', $price) }}" data-image="{{ $image }}" data-unit="{{ $unit }}" data-category="{{ $category }}">
+    <div class="flex gap-3">
+        <div class="h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-[#e9e1dc] bg-cream"><img src="{{ $image }}" alt="{{ $name }}" class="h-full w-full object-cover"></div>
+        <div class="min-w-0 flex-1"><span class="inline-flex rounded-full border px-2 py-0.5 text-[10px] font-bold {{ $tagClass }}">{{ $tag }}</span><h3 class="mt-1 font-display text-sm font-bold leading-snug">{{ $name }}</h3><p class="mt-0.5 font-mono text-xs text-muted">SKU: {{ $sku }}</p><div class="mt-1 flex items-baseline gap-2"><span class="font-display text-base font-bold text-red">{{ $price }}</span><span class="text-[11px] text-[#926f69]">/ {{ $unit }}</span></div></div>
+    </div>
+    <div class="mt-3 flex items-center justify-between gap-3 border-t border-cream pt-2.5"><div class="flex items-center rounded-lg border border-[#e9e1dc] bg-cream p-0.5"><button type="button" class="quantity-minus flex h-8 w-8 items-center justify-center rounded bg-white text-lg font-bold">−</button><input class="quantity w-9 border-0 bg-transparent p-0 text-center font-display text-sm font-bold focus:ring-0" readonly value="0"><button type="button" class="quantity-plus flex h-8 w-8 items-center justify-center rounded bg-white text-lg font-bold">+</button></div><button type="button" class="add-product flex-1 rounded-lg bg-yellow px-3 py-2 text-sm font-bold shadow-sm hover:brightness-95"><span class="material-symbols-outlined align-middle text-sm">add</span> Add to Order</button></div>
+</article>
+
