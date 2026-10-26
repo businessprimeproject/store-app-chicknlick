@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -114,7 +115,7 @@ class HomeController extends Controller
         foreach ($orders as &$order) {
             if (($order['number'] ?? '') === $orderNumber) {
                 $order['status'] = $status;
-                $this->saveOrderFile($order['_file'] ?? '', $order);
+                Order::where('number', $orderNumber)->update(['status' => $status]);
                 break;
             }
         }
@@ -339,8 +340,8 @@ class HomeController extends Controller
             'status' => 'Pending',
             'delivery_address' => $request->input('delivery_address', ''),
             'special_instructions' => $request->input('special_instructions', ''),
-            'submitted_at' => now()->format('M j, Y g:i A'),
-            'total' => '₱'.number_format($total, 2),
+            'submitted_at' => now(),
+            'total' => $total,
             'items' => collect(json_decode($request->input('order_items', '[]'), true) ?: [])->map(fn ($item) => [
                 'name' => $item['name'] ?? 'Commissary product',
                 'quantity' => (int) ($item['quantity'] ?? 1),
@@ -348,16 +349,8 @@ class HomeController extends Controller
                 'price' => (float) ($item['price'] ?? 0),
             ])->values()->all(),
         ];
-        $submittedOrders = $this->loadSubmittedOrders($request);
-        if (empty($submittedOrders)) {
-            $submittedOrders = $request->session()->get('submitted_orders', []);
-            if (empty($submittedOrders) && $request->session()->has('order_submitted')) {
-                $submittedOrders = [$request->session()->get('order_submitted')];
-            }
-        }
-        $submittedOrders[] = $newOrder;
-        $this->saveSubmittedOrders($request, $submittedOrders);
-        $request->session()->put('submitted_orders', $submittedOrders);
+        $order = Order::create($newOrder);
+        $newOrder = $this->orderArray($order);
         $request->session()->put('order_submitted', $newOrder);
 
         return redirect()->route('tracking');
@@ -397,44 +390,14 @@ class HomeController extends Controller
         return response('Generated successfully');
     }
 
-    private function submittedOrdersPath(Request $request): string
-    {
-        return 'order-history/'.sha1(strtolower((string) $request->session()->get('franchisee_email'))).'.json';
-    }
-
     private function loadSubmittedOrders(Request $request): array
     {
-        $disk = Storage::disk('local');
-        $path = $this->submittedOrdersPath($request);
-
-        if (! $disk->exists($path)) {
-            return [];
-        }
-
-        $orders = json_decode($disk->get($path), true);
-
-        return is_array($orders) ? $orders : [];
-    }
-
-    private function saveSubmittedOrders(Request $request, array $orders): void
-    {
-        Storage::disk('local')->put($this->submittedOrdersPath($request), json_encode(array_values($orders), JSON_PRETTY_PRINT));
+        return Order::query()->where('email', $request->session()->get('franchisee_email'))->latest('submitted_at')->get()->map(fn (Order $order) => $this->orderArray($order))->all();
     }
 
     private function loadAllOrders(): array
     {
-        $orders = [];
-        foreach (Storage::disk('local')->files('order-history') as $path) {
-            $emailHash = pathinfo($path, PATHINFO_FILENAME);
-            $items = json_decode(Storage::disk('local')->get($path), true);
-            foreach (is_array($items) ? $items : [] as $order) {
-                $order['email'] = $order['email'] ?? 'Franchisee account';
-                $order['status'] = $order['status'] ?? 'Pending';
-                $order['_file'] = $path;
-                $orders[] = $order;
-            }
-        }
-        return array_reverse($orders);
+        return Order::query()->latest('submitted_at')->get()->map(fn (Order $order) => $this->orderArray($order))->all();
     }
 
     private function orderAmount(array $order): float
@@ -442,21 +405,18 @@ class HomeController extends Controller
         return (float) str_replace([',', '₱', '$'], '', (string) ($order['total'] ?? 0));
     }
 
-    private function saveOrderFile(string $path, array $updatedOrder): void
+    private function orderArray(Order $order): array
     {
-        if ($path === '') {
-            return;
-        }
-
-        $existing = Storage::disk('local')->exists($path) ? json_decode(Storage::disk('local')->get($path), true) : [];
-        $existing = is_array($existing) ? $existing : [];
-        foreach ($existing as &$order) {
-            if (($order['number'] ?? '') === ($updatedOrder['number'] ?? '')) {
-                $order = $updatedOrder;
-                unset($order['_file']);
-            }
-        }
-        Storage::disk('local')->put($path, json_encode(array_values($existing), JSON_PRETTY_PRINT));
+        return [
+            'number' => $order->number,
+            'email' => $order->email,
+            'status' => $order->status,
+            'delivery_address' => $order->delivery_address,
+            'special_instructions' => $order->special_instructions,
+            'submitted_at' => optional($order->submitted_at)->format('M j, Y g:i A'),
+            'total' => '₱'.number_format((float) $order->total, 2),
+            'items' => $order->items ?? [],
+        ];
     }
 
     private function nextOrderNumber(): string

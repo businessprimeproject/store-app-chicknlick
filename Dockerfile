@@ -1,8 +1,8 @@
 FROM php:8.4-apache
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git unzip libsqlite3-dev \
-    && docker-php-ext-install pdo_sqlite \
+    && apt-get install -y --no-install-recommends git unzip libsqlite3-dev libpq-dev \
+    && docker-php-ext-install pdo_sqlite pdo_pgsql \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
