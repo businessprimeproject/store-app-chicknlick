@@ -34,12 +34,15 @@ class HomeController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if ($credentials['email'] !== 'admin@chicknlick.com' || $credentials['password'] !== 'admin123') {
+        $adminEmail = (string) config('app.admin_email');
+        $adminPasswordHash = (string) config('app.admin_password_hash');
+
+        if ($adminEmail === '' || $adminPasswordHash === '' || ! hash_equals(strtolower($adminEmail), strtolower($credentials['email'])) || ! Hash::check($credentials['password'], $adminPasswordHash)) {
             return back()->withErrors(['email' => 'Invalid admin credentials.']);
         }
 
         $request->session()->regenerate();
-        $request->session()->put('admin_email', $credentials['email']);
+        $request->session()->put('admin_email', $adminEmail);
 
         return redirect()->route('admin.dashboard');
     }

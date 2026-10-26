@@ -4,9 +4,9 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::post('/login', [HomeController::class, 'login'])->name('login');
+Route::post('/login', [HomeController::class, 'login'])->middleware('throttle:6,1')->name('login');
 Route::get('/register', [HomeController::class, 'register'])->name('register');
-Route::post('/register', [HomeController::class, 'storeRegistration'])->name('register.store');
+Route::post('/register', [HomeController::class, 'storeRegistration'])->middleware('throttle:3,10')->name('register.store');
 Route::post('/logout', [HomeController::class, 'logout'])->name('logout');
 Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 Route::get('/orders', [HomeController::class, 'orders'])->name('orders');
@@ -16,7 +16,7 @@ Route::get('/tracking/receipt', [HomeController::class, 'receipt'])->name('track
 Route::post('/cart/submit', [HomeController::class, 'submitOrder'])->name('cart.submit');
 Route::post('/generate', [HomeController::class, 'generate'])->name('generate');
 Route::get('/admin/login', [HomeController::class, 'adminLogin'])->name('admin.login');
-Route::post('/admin/login', [HomeController::class, 'adminAuthenticate'])->name('admin.authenticate');
+Route::post('/admin/login', [HomeController::class, 'adminAuthenticate'])->middleware('throttle:5,1')->name('admin.authenticate');
 Route::get('/admin', [HomeController::class, 'admin'])->name('admin.dashboard');
 Route::post('/admin/franchisees', [HomeController::class, 'adminStoreFranchisee'])->name('admin.franchisees.store');
 Route::patch('/admin/franchisees/{user}/approve', [HomeController::class, 'adminApproveFranchisee'])->name('admin.franchisees.approve');

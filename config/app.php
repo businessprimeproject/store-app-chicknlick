@@ -43,6 +43,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Administrator credentials
+    |--------------------------------------------------------------------------
+    |
+    | Keep administrator credentials outside the source tree. The password is
+    | stored as a bcrypt hash in ADMIN_PASSWORD_HASH.
+    |--------------------------------------------------------------------------
+    */
+
+    'admin_email' => env('ADMIN_EMAIL'),
+    'admin_password_hash' => env('ADMIN_PASSWORD_HASH'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application URL
     |--------------------------------------------------------------------------
     |
