@@ -35,12 +35,12 @@
         <main class="relative z-20 -mt-3 flex-1 space-y-4 px-4">
             <section class="relative overflow-hidden rounded-xl border border-[#ebe5d8] bg-white p-5 shadow-sm">
                 <div class="relative z-10 mb-4 flex items-center gap-2 border-b border-cream pb-3"><div class="flex h-8 w-8 items-center justify-center rounded-lg bg-cream text-red"><span class="material-symbols-outlined">storefront</span></div><div><h1 class="font-display text-lg font-bold tracking-tight">Franchisee Sign-In</h1><p class="text-xs text-muted">Store Operations Credentials</p></div></div>
-                <form action="{{ route('login') }}" method="POST" class="relative z-10 space-y-4">
+                <form action="{{ route('login') }}" method="POST" class="relative z-10 space-y-4" id="loginForm">
                     @csrf
                     <div><label for="email" class="mb-1.5 block text-xs font-bold">Franchisee Email Address</label><div class="relative"><span class="material-symbols-outlined pointer-events-none absolute inset-y-0 left-3 flex items-center text-muted">alternate_email</span><input id="email" name="email" type="email" value="{{ old('email') }}" required autocomplete="email" placeholder="store-id@chicknlickstores.com" class="w-full rounded-lg border border-[#d5cbb9] bg-paper py-2.5 pl-10 pr-3 text-sm font-medium outline-none transition focus:border-red focus:ring-1 focus:ring-red"></div>@error('email')<p class="mt-1 text-xs text-red-700">{{ $message }}</p>@enderror</div>
                     <div><div class="mb-1.5 flex items-center justify-between gap-2"><label for="password" class="text-xs font-bold">Password</label><a href="#" class="text-[11px] font-bold text-[#a83900] hover:underline">Forgot password?</a></div><div class="relative"><span class="material-symbols-outlined pointer-events-none absolute inset-y-0 left-3 flex items-center text-muted">lock</span><input id="password" name="password" type="password" required autocomplete="current-password" placeholder="••••••••••••" class="w-full rounded-lg border border-[#d5cbb9] bg-paper py-2.5 pl-10 pr-10 text-sm font-semibold tracking-widest outline-none transition focus:border-red focus:ring-1 focus:ring-red"><button type="button" id="togglePassword" class="absolute inset-y-0 right-3 text-muted" title="Toggle password visibility" aria-label="Toggle password visibility"><span class="material-symbols-outlined">visibility</span></button></div>@error('password')<p class="mt-1 text-xs text-red-700">{{ $message }}</p>@enderror</div>
                     <label class="flex cursor-pointer select-none items-center gap-2 pt-1 text-xs font-medium"><input name="remember" type="checkbox" class="h-4 w-4 rounded border-[#d5cbb9] accent-red focus:ring-red">Remember this store device</label>
-                    <button type="submit" class="flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-[#e8c400] bg-yellow font-bold tracking-wide text-[#101010] shadow-md transition hover:bg-[#e8c400] active:scale-[.98]"><span class="material-symbols-outlined">login</span>Sign In to Portal</button>
+                    <button type="submit" id="loginButton" class="flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-[#e8c400] bg-yellow font-bold tracking-wide text-[#101010] shadow-md transition hover:bg-[#e8c400] active:scale-[.98]"><span class="material-symbols-outlined">login</span><span>Sign In to Portal</span></button>
                 </form>
                 <p class="relative z-10 mt-4 text-center text-xs text-muted">New franchisee? <a href="{{ route('register') }}" class="font-bold text-[#a83900] hover:underline">Create an account</a></p>
             </section>
@@ -48,7 +48,7 @@
 
         <footer class="mt-8 space-y-2 border-t border-[#e9e1dc] px-5 pb-4 pt-4 text-center"><p class="text-xs text-muted">24/7 Commissary Logistics Hotline</p><p class="flex items-center justify-center gap-1.5 text-xs text-muted"><span class="inline-flex items-center gap-1 rounded-full bg-yellow px-2 py-0.5 text-[11px] font-bold text-[#101010]"><span class="h-1.5 w-1.5 rounded-full bg-[#101010]"></span>Operational</span>System Status: <strong class="text-ink">All Hubs On-Time</strong></p><p class="pt-2 text-[10px] text-[#926f69]">Chick N Lick Franchise Operations LLC © 2024 • Version 4.12.0</p></footer>
     </div>
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}"></script><script>document.getElementById('loginForm')?.addEventListener('submit',function(){const button=document.getElementById('loginButton');if(button){button.disabled=true;button.classList.add('opacity-70');button.querySelector('span:last-child').textContent='Signing in…';}});</script>
 </body>
 </html>
 
