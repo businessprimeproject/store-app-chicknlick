@@ -4,7 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Chick N Lick - Franchisee Portal</title>
+    <title>Chick 'N Lick Portal</title>
+    <meta name="theme-color" content="#ffd21f">
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/chick-n-lick-logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/chick-n-lick-logo.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -48,7 +52,7 @@
 
         <footer class="mt-8 space-y-2 border-t border-[#e9e1dc] px-5 pb-4 pt-4 text-center"><p class="text-xs text-muted">24/7 Commissary Logistics Hotline</p><p class="flex items-center justify-center gap-1.5 text-xs text-muted"><span class="inline-flex items-center gap-1 rounded-full bg-yellow px-2 py-0.5 text-[11px] font-bold text-[#101010]"><span class="h-1.5 w-1.5 rounded-full bg-[#101010]"></span>Operational</span>System Status: <strong class="text-ink">All Hubs On-Time</strong></p><p class="pt-2 text-[10px] text-[#926f69]">Chick N Lick Franchise Operations LLC © 2024 • Version 4.12.0</p></footer>
     </div>
-    <script src="{{ asset('js/app.js') }}"></script><script>document.getElementById('loginForm')?.addEventListener('submit',function(){const button=document.getElementById('loginButton');if(button){button.disabled=true;button.classList.add('opacity-70');button.querySelector('span:last-child').textContent='Signing in…';}});</script>
+    <script src="{{ asset('js/app.js') }}"></script><script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('{{ asset('sw.js') }}',{scope:'/'}).catch(()=>{}));}document.getElementById('loginForm')?.addEventListener('submit',function(){const button=document.getElementById('loginButton');if(button){button.disabled=true;button.classList.add('opacity-70');button.querySelector('span:last-child').textContent='Signing in…';}});</script>
 </body>
 </html>
 

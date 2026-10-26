@@ -1,0 +1,24 @@
+{
+  "name": "Chick 'N Lick Portal",
+  "short_name": "Chick 'N Lick",
+  "description": "Chick 'N Lick Franchisee Ordering Portal",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fffaf6",
+  "theme_color": "#ffd21f",
+  "icons": [
+    {
+      "src": "/images/chick-n-lick-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/chick-n-lick-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
