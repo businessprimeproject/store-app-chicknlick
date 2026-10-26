@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: chick-n-lick-portal
+    runtime: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        sync: false
+      - key: LOG_CHANNEL
+        value: stderr
