@@ -13,5 +13,7 @@ services:
         value: file
       - key: SESSION_SECURE_COOKIE
         value: true
+      - key: CACHE_STORE
+        value: file
       - key: LOG_CHANNEL
         value: stderr

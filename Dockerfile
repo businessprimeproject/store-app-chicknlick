@@ -21,7 +21,7 @@ ENV DB_CONNECTION=sqlite
 ENV DB_DATABASE=/var/www/html/database/database.sqlite
 
 RUN touch database/database.sqlite \
-    && chown www-data:www-data database/database.sqlite \
+    && chown -R www-data:www-data database storage bootstrap/cache \
     && php artisan storage:link || true
 
 EXPOSE 80
